@@ -1,6 +1,8 @@
 <template>
-    <Modal v-if="modal == 'shoppingCart'">
-        <div class="modal__body" v-if="step == 'viewOrder'">
+    <Modal v-if="modal == 'shoppingCart'"
+    :extended="extended"
+    >
+        <div class="modal__inner" v-if="step == 'viewOrder'">
             <div class="modal__title">Корзина</div>
                 <div class="modal__content cartItems">
                     <ShoppingCartItem 
@@ -8,6 +10,10 @@
                     :key="cartItem.product.id"
                     :item="cartItem"
                     />
+
+                    <div class="cartItems__empty" v-if="!cartStore.cart.length">
+                        Пусто
+                    </div>
                 </div>
                 <div class="modal__bottom">
                     <div class="cart__totalSum">
@@ -17,10 +23,13 @@
                         Сумма заказа для доставки курьером должна составлять не менее 500 ₽
                     </div>
                     <div class="cart__buttons">
-                        <div class="btn">
+                        <div class="btn"
+                        @click="store.closeModal()"
+                        >
                             Вернуться к покупкам
                         </div>
-                        <div class="btn active"
+                        <div class="btn brown"
+                        :class="{disabled : !cartStore.cart.length}"
                         @click="step='makeOrder'"
                         >
                             Оформить заказ
@@ -31,7 +40,7 @@
         </div>
 
 
-        <div class="modal__body" v-if="step=='makeOrder'">
+        <div class="modal__inner" v-if="step=='makeOrder'">
             <div class="modal__title sm">
                 Оформление заказа
             </div>
@@ -181,7 +190,10 @@
                 </div>
             </div>
        
-        
+    <div class="shoppingCart__nav" v-if="cartStore.cart.length">
+        <div class="item" :class="{active : step == 'viewOrder'}" @click="step = 'viewOrder'"></div>
+        <div class="item" :class="{active : step == 'makeOrder'}" @click="step ='makeOrder'"></div>
+    </div>
 
             
     </Modal>
@@ -198,12 +210,15 @@ import { useCartStore } from '~/store/cart'
 import VueInput from '../ui/Input.vue'
 import RadioVue from '../ui/Radio.vue'
 const step = ref('viewOrder')
+const extended = ref(false)
 
 const store = useMainStore()
 const cartStore = useCartStore()
 
 const { cart } = storeToRefs(cartStore)
 const { modal } = storeToRefs(store)
+
+const emit = defineEmits(["extend"])
 
 const form = reactive({
     name : "",
@@ -222,7 +237,6 @@ const order = reactive({
 })
 
 const v$ = useVuelidate(formRules, form)
-
 
 const productsSum = computed(() => cartStore.productsSum)
 const totalSum = computed(() => productsSum.value + (order.shippingMethod == 1 ? 500 : 0))

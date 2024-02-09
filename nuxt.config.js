@@ -4,9 +4,10 @@ export default defineNuxtConfig({
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
   builder : "webpack",
+  target : "static",
   bridge : {
     typescript : true,
-    nitro : true
+    nitro : false
   },
 
   // Global page headers: https://go.nuxtjs.dev/config-head

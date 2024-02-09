@@ -1,7 +1,7 @@
-import Product from "./Product";
+import type Product from "./Product";
 
 export default class Api {
-     static async getProducts() : Promise<Product[]> {
+     static async getProducts(category : string, page = 1) : Promise<Product[]> {
         return [
             {
                 "id": 1,

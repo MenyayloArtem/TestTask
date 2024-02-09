@@ -1,0 +1,36 @@
+@import "./global.scss";
+@import "./components/header.scss";
+@import "../deps/containers.scss";
+@import url('https://fonts.googleapis.com/css2?family=Neucha&display=swap');
+
+.mobileMenu {
+    font-family: Ubuntu;
+    font-weight: 300;
+    padding-top: 8px;
+    position: fixed;
+    top: 82px;
+    width: 100%;
+    max-height: calc(100% - 82px);
+    border-top: 1px solid #fff;
+    background: #062D4E;
+    z-index: 999;
+    font-size: 22px;
+
+    &__section:last-child {
+        margin-top: 5px;
+        padding-top: 5px;
+        border-top: 1px solid #fff;
+        display: none;
+
+        @media screen and (max-width : $sm) {
+            display: block;
+        }
+    }
+
+    &__item {
+        padding: 16px;
+        width: 100%;
+        color: #fff;
+        text-align: center;
+    }
+}

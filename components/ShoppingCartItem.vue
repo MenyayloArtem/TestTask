@@ -49,7 +49,9 @@
                 </div>
             </div>
         </div>
-        <div class="cartItem__remove">
+        <div class="cartItem__remove"
+        @click="remove()"
+        >
             <img src="~/assets/icons/trash 1.svg" alt="trash">
         </div>
     </div>
@@ -73,5 +75,6 @@ const cartStore = useCartStore()
 
 const increment = () => cartStore.incrementCount(props.item)
 const decrement = () => cartStore.decrementCount(props.item)
+const remove = () => cartStore.deleteItem(props.item)
 const changeFavorite = () => mainStore.changeFavorite(props.item.product)
 </script>

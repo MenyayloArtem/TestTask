@@ -9,12 +9,20 @@
                 </div>
 
                 <div class="nav__left-md">
-                    <img src="~/assets/icons/burger-menu.svg" alt="menu">
+
+                        <img src="~/assets/icons/burger-menu.svg"
+                        @click="changeMenu()"
+                     alt="menu"
+                     
+                     >
+                    
                     <img src="~/assets/icons/logo-md.svg" alt="logo">
                 </div>
 
                 <div class="nav__left-sm">
-                    <img src="~/assets/icons/burger-menu.svg" alt="menu">
+                    <img src="~/assets/icons/burger-menu.svg" alt="menu"
+                    @click="changeMenu()"
+                    >
                 </div>
 
                 <img class="logo-sm" src="~/assets/icons/logo-md.svg" alt="logo">
@@ -46,18 +54,49 @@
             </div>
         </nav>
 
+        <div class="mobileMenu" v-if="store.modal == 'menu'">
+            <div class="mobileMenu__section">
+                <div class="mobileMenu__item">Меню</div>
+                <div class="mobileMenu__item">Доставка</div>
+                <div class="mobileMenu__item">Акции</div>
+                <div class="mobileMenu__item">Отзывы</div>
+                <div class="mobileMenu__item">Контакты</div>
+            </div>
+
+            <div class="mobileMenu__section">
+                <div class="mobileMenu__item"
+                @click="openCart()"
+                >Корзина</div>
+                <div class="mobileMenu__item">Войти</div>
+            </div>
+            
+            
+        </div>
+
         <main class="main">
             <div class="main__container">
                 <div class="main__title">
                     Меню
                 </div>
                 <div class="main__tabs">
-                    <div class="tab">Роллы</div>
-                    <div class="tab">Суши и гуканы</div>
-                    <div class="tab">Сеты</div>
-                    <div class="tab active">Лапша и рис</div>
-                    <div class="tab">Салаты</div>
-                    <div class="tab">Горячие блюда</div>
+                    <div class="tab" :class="{active : category == 'rolls'}"
+                    @click="category = 'rolls'"
+                    >Роллы</div>
+                    <div class="tab" :class="{active : category == 'sushi'}"
+                    @click="category = 'sushi'"
+                    >Суши и гуканы</div>
+                    <div class="tab" :class="{active : category == 'sets'}"
+                    @click="category = 'sets'"
+                    >Сеты</div>
+                    <div class="tab" :class="{active : category == 'rise'}"
+                     @click="category = 'rise'"
+                    >Лапша и рис</div>
+                    <div class="tab" :class="{active : category == 'salats'}"
+                    @click="category = 'salats'"
+                    >Салаты</div>
+                    <div class="tab" :class="{active : category == 'hot'}"
+                    @click="category = 'hot'"
+                    >Горячие блюда</div>
                 </div>
 
                 <div class="main__cards">
@@ -73,6 +112,7 @@
 
 <style lang="scss">
 @use "~/assets/scss/styles/index.scss";
+@use "~/assets/scss/styles/mobileMenu.scss";
 </style>
 
 <script setup lang="ts">
@@ -82,6 +122,8 @@ import ShoppingCartModal from '~/components/modals/ShoppingCartModal.vue';
 import { useMainStore } from '~/store';
 import ProductCard from '~/components/ProductCard.vue';
 
+const category = ref("rise")
+
 const store = useMainStore()
 
 const { products, cart } = storeToRefs(store)
@@ -90,7 +132,19 @@ const openCart = () => {
     store.setModal("shoppingCart")
 }
 
+const changeMenu = () => {
+    if (!store.modal) {
+        store.setModal("menu")
+    } else {
+        store.closeModal()
+    }
+}
+
+watch(() => category.value, () => {
+    store.loadProducts(category.value)
+})
+
 onMounted(async () => {
-    await store.loadProducts()
+    await store.loadProducts(category.value)
 })
 </script>
